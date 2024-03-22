@@ -6,7 +6,7 @@ services:
     image: argilla/argilla-server:latest
     restart: unless-stopped
     ports:
-      - "80:6900"
+      - "6900:6900"
     environment:
       ARGILLA_HOME_PATH: /var/lib/argilla
       ARGILLA_ELASTICSEARCH: http://elasticsearch:9200
