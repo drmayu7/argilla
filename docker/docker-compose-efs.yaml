@@ -62,4 +62,4 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=fs-05938a0db346416a4.efs.ap-southeast-1.amazonaws.com,nfsvers=4,soft,rw"
-      device: ":/elasticdata"
+      device: ":/"
