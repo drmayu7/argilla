@@ -38,6 +38,9 @@ services:
       memlock:
         soft: -1
         hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     volumes:
       - elasticdata:/usr/share/elasticsearch/data/
       
