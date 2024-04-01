@@ -51,6 +51,8 @@ services:
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      ELASTICSEARCH_USERNAME: argilla
+      ELASTICSEARCH_PASSWORD: ${DEFAULT_PASSWORD}
 
 volumes:
   argilladata:
