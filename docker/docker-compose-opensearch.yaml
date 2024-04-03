@@ -9,7 +9,7 @@ services:
     environment:
       ARGILLA_HOME_PATH: /var/lib/argilla
       ARGILA_SEARCH_ENGINE: opensearch
-      ARGILLA_ELASTICSEARCH: https://zmm5gdfb80vif4j6jwp2.ap-southeast-1.aoss.amazonaws.com
+      ARGILLA_ELASTICSEARCH: https://vpc-argilla-opensearch-tjarea22z52bvlrq4umgb2viwy.ap-southeast-1.es.amazonaws.com
       ARGILLA_AUTH_SECRET_KEY: ${ARGILLA_SECRET:? Please generate a 32 character random string with `openssl rand -hex 32`}
       ARGILLA_ENABLE_TELEMETRY: 0 # Opt-out for telemetry https://docs.argilla.io/en/latest/reference/telemetry.html
       ARGILLA_LOCAL_AUTH_USERS_DB_FILE: /config/.users.yaml
