@@ -9,7 +9,7 @@ services:
       - "80:6900"
     environment:
       ARGILLA_HOME_PATH: /var/lib/argilla
-      ARGILLA_ELASTICSEARCH: "http://argilla:${DEFAULT_PASSWORD}@localhost:9200"
+      ARGILLA_ELASTICSEARCH: "http://argilla:${DEFAULT_PASSWORD}@elasticsearch1:9200"
       ARGILLA_AUTH_SECRET_KEY: ${ARGILLA_SECRET:? Please generate a 32 character random string with `openssl rand -hex 32`}
       ARGILLA_ENABLE_TELEMETRY: 0
       ARGILLA_LOCAL_AUTH_USERS_DB_FILE: /config/.users.yaml
@@ -56,7 +56,7 @@ services:
       - cluster.name=argilla-cluster
       - "cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3"
       - "discovery.seed_hosts=elasticsearch1:9300,elasticsearch3:9300"
-      - "node.roles=data,ingest"
+      - "node.roles=master,data,ingest"
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - xpack.security.enabled=false
     volumes:
@@ -69,7 +69,7 @@ services:
       - cluster.name=argilla-cluster
       - "cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3"
       - "discovery.seed_hosts=elasticsearch1:9300,elasticsearch2:9300"
-      - "node.roles=data,ingest"
+      - "node.roles=master,data,ingest"
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - xpack.security.enabled=false
     volumes:
@@ -81,7 +81,7 @@ services:
       - "5601:5601"
     environment:
       ELASTICSEARCH_URL: http://elasticsearch1:9200
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch1:9200"]'
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch1:9200", "http://elasticsearch2:9200", "http://elasticsearch3:9200"]'
 
 volumes:
   argilladata:
