@@ -9,7 +9,7 @@ services:
       - "80:6900"
     environment:
       ARGILLA_HOME_PATH: /var/lib/argilla
-      ARGILLA_ELASTICSEARCH: "http://argilla:${DEFAULT_PASSWORD}@elasticsearch1:9200
+      ARGILLA_ELASTICSEARCH: "http://argilla:${DEFAULT_PASSWORD}@elasticsearch1:9200"
       ARGILLA_AUTH_SECRET_KEY: ${ARGILLA_SECRET:? Please generate a 32 character random string with `openssl rand -hex 32`}
       ARGILLA_ENABLE_TELEMETRY: 0
       ARGILLA_LOCAL_AUTH_USERS_DB_FILE: /config/.users.yaml
