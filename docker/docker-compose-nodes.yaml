@@ -13,8 +13,6 @@ services:
       ARGILLA_AUTH_SECRET_KEY: ${ARGILLA_SECRET:? Please generate a 32 character random string with `openssl rand -hex 32`}
       ARGILLA_ENABLE_TELEMETRY: 0
       ARGILLA_LOCAL_AUTH_USERS_DB_FILE: /config/.users.yaml
-      # DEFAULT_USER_PASSWORD: ${DEFAULT_PASSWORD} # Uncomment and set this if using a default user
-      # DEFAULT_USER_API_KEY: ${DEFAULT_APIKEY} # Uncomment and set this if using a default user API key
     volumes:
       - argilladata:/var/lib/argilla
       - ${PWD}/.users.yaml:/config/.users.yaml
@@ -34,7 +32,8 @@ services:
     environment:
       - node.name=elasticsearch1
       - cluster.name=argilla-cluster
-      - "cluster.initial_master_nodes=elasticsearch1"
+      - "cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3"
+      - "discovery.seed_hosts=elasticsearch2:9300,elasticsearch3:9300"
       - "node.roles=master,data,ingest"
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - xpack.security.enabled=false
@@ -55,6 +54,8 @@ services:
     environment:
       - node.name=elasticsearch2
       - cluster.name=argilla-cluster
+      - "cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3"
+      - "discovery.seed_hosts=elasticsearch1:9300,elasticsearch3:9300"
       - "node.roles=data,ingest"
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - xpack.security.enabled=false
@@ -66,6 +67,8 @@ services:
     environment:
       - node.name=elasticsearch3
       - cluster.name=argilla-cluster
+      - "cluster.initial_master_nodes=elasticsearch1,elasticsearch2,elasticsearch3"
+      - "discovery.seed_hosts=elasticsearch1:9300,elasticsearch2:9300"
       - "node.roles=data,ingest"
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - xpack.security.enabled=false
@@ -77,8 +80,8 @@ services:
     ports:
       - "5601:5601"
     environment:
-      ELASTICSEARCH_URL: http://es1:9200
-      ELASTICSEARCH_HOSTS: '["http://es1:9200"]'
+      ELASTICSEARCH_URL: http://elasticsearch1:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch1:9200"]'
 
 volumes:
   argilladata:
