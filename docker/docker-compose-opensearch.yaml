@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+
+  argilla:
+    image: argilla/argilla-server:latest
+    restart: unless-stopped
+    ports:
+      - "80:6900"
+    environment:
+      ARGILLA_HOME_PATH: /var/lib/argilla
+      ARGILA_SEARCH_ENGINE: opensearch
+      ARGILLA_ELASTICSEARCH: ${AWS_OPENSEARCH_URL}
+      ARGILLA_AUTH_SECRET_KEY: ${ARGILLA_SECRET:? Please generate a 32 character random string with `openssl rand -hex 32`}
+      ARGILLA_ENABLE_TELEMETRY: 0 # Opt-out for telemetry https://docs.argilla.io/en/latest/reference/telemetry.html
+      # Set user configuration https://docs.argilla.io/en/latest/getting_started/installation/configurations/user_management.html
+      ARGILLA_LOCAL_AUTH_USERS_DB_FILE: /config/.users.yaml
+      # DEFAULT_USER_ENABLED: false # Uncomment this line to disable the creation of the default user
+      DEFAULT_USER_PASSWORD: ${DEFAULT_PASSWORD} # Uncomment this line to set a custom password for the default user
+      DEFAULT_USER_API_KEY: ${DEFAULT_APIKEY} # Uncomment this line to set a custom api-key for the default user
+    volumes:
+      # ARGILLA_HOME_PATH is used to define where Argilla will save it's application data.
+      # If you change ARGILLA_HOME_PATH value please copy that same value to argilladata volume too.
+      - argilladata:/var/lib/argilla
+      - ${PWD}/.users.yaml:/config/.users.yaml
+    depends_on:
+      - elasticsearch
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.3
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=es-argilla-local
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - cluster.routing.allocation.disk.threshold_enabled=false
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data/
+      
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.5.3
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+
+volumes:
+  argilladata:
+  elasticdata:
