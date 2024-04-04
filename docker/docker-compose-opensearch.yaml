@@ -24,13 +24,5 @@ services:
       - argilladata:/var/lib/argilla
       - ${PWD}/.users.yaml:/config/.users.yaml
       
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.5.3
-    ports:
-      - "5601:5601"
-    environment:
-      ELASTICSEARCH_URL: ${AWS_OPENSEARCH_URL}
-      ELASTICSEARCH_HOSTS: '[${AWS_OPENSEARCH_URL}]'
-
 volumes:
   argilladata:
